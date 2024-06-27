@@ -1,0 +1,35 @@
+.container {
+  flex: 1;
+  padding: 16px;
+}
+
+.matrix-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    grid-gap: 16px;
+    padding: 16px;
+    background-color: blueviolet;
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;  
+  }
+
+.matrix-card {
+background-color: #ffffff;
+border-radius: 4px;
+box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+padding: 10px;
+height: 100px;
+width: 100px;
+}
+
+.matrix-card h3 {
+margin-top: 0;
+}
+.card {
+  background-color: brown;
+  padding: 5px;
+  margin-bottom: 5px;
+  cursor: move;
+}
