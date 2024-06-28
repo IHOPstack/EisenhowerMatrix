@@ -11,25 +11,6 @@
     <h2>Matrix You</h2>
     <div id="matrix-container" class="matrix-container"></div>
   </div>
-  <script src="js/matrix-view.js"></script>
-  <script>
-    var t = TrelloPowerUp.iframe();
-
-    t.render(function() {
-        console.log('Trello iframe rendered');
-        if (typeof renderMatrixView === 'function') {
-            t.cards('all')
-                .then(function(cards) {
-                    console.log('Retrieved cards:', cards);
-                    renderMatrixView(t, cards);
-                })
-                .catch(function(error) {
-                    console.error('Error retrieving cards:', error);
-                });
-        } else {
-            console.error('renderMatrixView function not found. Check if matrix-view.js is loaded correctly.');
-        }
-    });
-</script>
+  <script type="module" src="js/matrix-view.js"></script>
 </body>
 </html>

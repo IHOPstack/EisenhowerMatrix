@@ -1,3 +1,5 @@
+import * as Utils from './utils.js'
+
 function openMatrixView(t) {
   console.log('openMatrixView running')
   return t.cards('all')
@@ -12,10 +14,6 @@ function openMatrixView(t) {
           var container = document.createElement('div');
           container.id = 'matrix-container';
           document.body.appendChild(container);
-          
-            // Call renderMatrixView with the cards data
-            renderMatrixView(t, cards);
-            console.log('renderMatrixView called');
         }
       });
     });
@@ -26,18 +24,10 @@ TrelloPowerUp.initialize({
       icon: '...',
       text: 'Set Priority',
       callback: function(t) {
-        return Promise.all([
-          t.get('card', 'shared', 'importance'),
-          t.get('card', 'shared', 'urgency')
-        ]).then(function([importance, urgency]) {
-          if (importance === undefined) {
-            importance = 3;
-          }
-          if (urgency === undefined) {
-            urgency = 3;
-          }
-          return t.popup({
-            title: 'Set Priority',
+        return Utils.getCardPriority(t, t.getContext().card)
+          .then(({importance, urgency}) => {
+            return t.popup({
+              title: 'Set Priority',
             url: './edit-field.html',
             args: { importance: importance, urgency: urgency }
           });

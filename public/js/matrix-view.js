@@ -1,4 +1,32 @@
-function renderMatrixView(t, cards) {
+import * as Utils from './utils.js';
+
+var t = TrelloPowerUp.iframe();
+
+t.render(function() {
+    console.log('Trello iframe rendered');
+    if (typeof renderMatrixView === 'function') {
+        t.cards('all')
+            .then(function(cards) {
+                console.log('Retrieved cards:', cards);
+                renderMatrixView(t, cards);
+            })
+            .catch(function(error) {
+                console.error('Error retrieving cards:', error);
+            });
+    } else {
+        console.error('renderMatrixView function not found. Check if matrix-view.js is loaded correctly.');
+    }
+});
+function createCardElement(card) {
+  const cardElement = document.createElement('div');
+  cardElement.classList.add('card');
+  cardElement.draggable = true;
+  cardElement.dataset.cardId = card.id;
+  cardElement.textContent = `${card.name}`;
+  cardElement.addEventListener('dragstart', handleDragStart);
+  return cardElement;
+}
+export function renderMatrixView(t, cards) {
   console.log('MATRIXrenderMatrixView called with cards:', cards);
   const matrixContainer = document.getElementById('matrix-container');
   matrixContainer.innerHTML = ''; // Clear existing content
@@ -17,19 +45,11 @@ function renderMatrixView(t, cards) {
   }
   // Create card elements and add them to the matrix
   Promise.all(cards.map(card => 
-    Promise.all([
-      t.get(card.id, 'shared', 'importance'),
-      t.get(card.id, 'shared', 'urgency')
-    ]).then(([importance, urgency]) => ({...card, importance, urgency}))
-  )).then(cardsWithData => {
-    cardsWithData.forEach(card => {
-      const cardElement = document.createElement('div');
-      cardElement.classList.add('card');
-      cardElement.draggable = true;
-      cardElement.dataset.cardId = card.id;
-      cardElement.textContent = `${card.name}`;
-      cardElement.addEventListener('dragstart', handleDragStart);
-
+      Utils.getCardPriority(t, card.id).then(priority => ({...card, ...priority}))
+    )).then(cardsWithData => {
+      cardsWithData.forEach(card => {
+        const cardElement = createCardElement(card);
+  
       const row = Math.floor((card.importance || 3) / 2); // Map 1-5 to 0-3
       const col = Math.floor((card.urgency || 3) / 2); // Map 1-5 to 0-3
       document.getElementById(`card-container-${row}-${col}`).appendChild(cardElement);
@@ -56,10 +76,7 @@ function handleDrop(event, t) {
     const importance = row + 1;
     const urgency = col + 1;
 
-    Promise.all([
-      t.set(cardId, 'shared', 'importance', importance),
-      t.set(cardId, 'shared', 'urgency', urgency)
-    ]).then(() => {
+    Utils.setCardPriority(t, cardId, importance, urgency).then(() => {
       console.log(`Updated position for card ${cardId}: importance ${importance}, urgency ${urgency}`);
     }).catch(error => {
       console.error('Error updating card position:', error);
