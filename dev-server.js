@@ -11,8 +11,8 @@ nodemon({
   browserSync.init({
     proxy: 'https://localhost:3000', // Your Express server URL
     https: {
-      key: './key.pem',
-      cert: './cert.pem'
+      key: './secrets/key.pem',
+      cert: './secrets/cert.pem'
     },
     files: ['public/**/*.{html,css,js}'], // Files to watch for changes
     reloadDelay: 1000, // Delay before reloading (in ms)
