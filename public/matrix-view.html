@@ -5,11 +5,30 @@
   <script src="https://p.trellocdn.com/power-up.min.js"></script>
   <script src="http://localhost:35729/livereload.js"></script>
   <link rel="stylesheet" href="css/matrix-view.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
   <div class="container">
-    <h2>Matrix You</h2>
-    <div id="matrix-container" class="matrix-container"></div>
+    <div class="header">
+      <h2>Matrix View</h2>
+      <button id="settingsButton" class="settings-button"><i class="fas fa-cog"></i></button>
+    </div>
+    <div class="main-content">
+      <div id="unplaced-cards" class="unplaced-cards"></div>
+      <div class="matrix-wrapper">
+        <div class="matrix-label top-label">
+          <span id="topLabel"></span>
+          <i class="fas fa-arrow-right"></i>
+        </div>
+        <div class="matrix-content">
+          <div class="matrix-label side-label">
+            <span id="sideLabel"></span>
+            <i class="fas fa-arrow-up"></i>
+          </div>
+          <div id="matrix-container" class="matrix-container"></div>
+        </div>
+      </div>
+    </div>
   </div>
   <script type="module" src="js/matrix-view.js"></script>
 </body>

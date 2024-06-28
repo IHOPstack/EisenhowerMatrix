@@ -1,18 +1,15 @@
 .container {
-  flex: 1;
-  padding: 16px;
+  display: flex;
+  flex-direction: column;
 }
 
 .matrix-container {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     grid-template-rows: repeat(4, 1fr);
-    grid-gap: 16px;
-    padding: 16px;
+    grid-gap: 10px;
     background-color: blueviolet;
-    flex: 1;
     overflow-y: auto;
-    padding: 16px;  
   }
 
 .matrix-card {
@@ -32,4 +29,60 @@ margin-top: 0;
   padding: 5px;
   margin-bottom: 5px;
   cursor: move;
+}
+
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.settings-button {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.main-content {
+  display: flex;
+  flex-direction: row;
+}
+
+.unplaced-cards {
+  width: 200px; /* Adjust as needed */
+  margin-right: 20px;
+}
+
+.matrix-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.matrix-label.top-label {
+  align-self: center;
+  margin-bottom: 10px;
+}
+
+.matrix-content {
+  display: flex;
+  flex-direction: row;
+}
+
+.matrix-label.side-label {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transform: rotate(180deg);
+  margin-right: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.matrix-label.side-label i {
+  transform: rotate(180deg);
+  margin-top: 10px;
 }
