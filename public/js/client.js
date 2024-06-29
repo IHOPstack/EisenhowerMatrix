@@ -35,14 +35,21 @@ TrelloPowerUp.initialize({
       }
     }];
   },
-'board-buttons': function(t){
-    console.log('board-buttons listener called');
-      return {
-          icon: '../../matrix-icon.svg',
-          text: 'Matrix View',
-          callback: function(t) {
-            return openMatrixView(t);
-          }
-      }
+  'show-settings': function(t, options){
+    return t.popup({
+      title: 'Matrix View Settings',
+      url: './settings.html',
+      height: 300
+    });
+  },
+  'board-buttons': function(t){
+      console.log('board-buttons listener called');
+        return {
+            icon: '../../matrix-icon.svg',
+            text: 'Matrix View',
+            callback: function(t) {
+              return openMatrixView(t);
+            }
+        }
   }
 });
