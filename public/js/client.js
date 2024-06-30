@@ -1,4 +1,5 @@
 import * as Utils from './utils.js'
+import { sortCards } from './organizer.js';
 
 function openMatrixView(t) {
   console.log('openMatrixView running')
@@ -28,7 +29,7 @@ TrelloPowerUp.initialize({
           .then(({importance, urgency}) => {
             return t.popup({
               title: 'Set Priority',
-            url: './edit-field.html',
+            url: '../priority-popup.html',
             args: { importance: importance, urgency: urgency }
           });
         });
@@ -42,7 +43,21 @@ TrelloPowerUp.initialize({
       height: 300
     });
   },
-  'board-buttons': function(t){
+    'list-sorters': function(t) {
+      return [{
+        text: 'Sort by Urgency & Importance',
+        callback: function(t, opts) {
+          return t.cards('all')
+            .then(cards => sortCards(cards, t))
+            .then(sortedCards => {
+              return {
+                sortedIds: sortedCards.map(card => card.id)
+              };
+            });
+        }
+      }];
+    },
+          'board-buttons': function(t){
       console.log('board-buttons listener called');
         return {
             icon: '../../matrix-icon.svg',
