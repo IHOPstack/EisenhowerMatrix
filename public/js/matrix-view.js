@@ -90,8 +90,8 @@ export function renderMatrixView(t, cards) {
       const cardElement = createCardElement(card);
 
       if (card.importance && card.urgency) {
-        const row = Math.floor((card.importance - 1) * settings.gridRows / 5);
-        const col = Math.floor((card.urgency - 1) * settings.gridCols / 5);
+        const row = (card.importance - 1);
+        const col = (card.urgency - 1);
         if (row < settings.gridRows && col < settings.gridCols) {
           document.getElementById(`card-container-${row}-${col}`).appendChild(cardElement);
         } else {
@@ -119,9 +119,8 @@ function handleDrop(event, t) {
     const row = parseInt(newContainer.dataset.row);
     const col = parseInt(newContainer.dataset.col);
 
-    // Map grid position to 1-5 scale
-    const importance = Math.floor(row * 5 / settings.gridRows) + 1;
-    const urgency = Math.floor(col * 5 / settings.gridCols) + 1;
+    const importance = row + 1;
+    const urgency = col + 1;
 
     Utils.setCardPriority(t, cardId, importance, urgency).then(() => {
       console.log(`Updated position for card ${cardId}: importance ${importance}, urgency ${urgency}`);

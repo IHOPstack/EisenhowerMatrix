@@ -29,7 +29,7 @@ TrelloPowerUp.initialize({
           .then(({importance, urgency}) => {
             return t.popup({
               title: 'Set Priority',
-            url: '../priority-popup.html',
+            url: './priority-popup.html',
             args: { importance: importance, urgency: urgency }
           });
         });

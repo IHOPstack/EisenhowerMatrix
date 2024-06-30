@@ -4,8 +4,8 @@ var importanceInput = document.getElementById('importance');
 var urgencyInput = document.getElementById('urgency');
 
 t.render(function() {
-  importanceInput.value = t.arg('importance');
-  urgencyInput.value = t.arg('urgency');
+  importanceInput.value = t.arg('importance') || 3;
+  urgencyInput.value = t.arg('urgency') || 3;
 });
 
 var form = document.getElementById('priority-form');
