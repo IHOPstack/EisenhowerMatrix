@@ -1,28 +1,15 @@
 import * as Utils from './utils.js';
+import { loadSettings, saveSettings } from './settings.js';
 
 var t = TrelloPowerUp.iframe();
 
-let settings = {
-  gridTitle: 'Matrix View',
-  topLabel: 'Importance',
-  sideLabel: 'Urgency',
-  gridRows: 4,
-  gridCols: 4,
-};
+let settings;
 
 t.render(function() {
-  console.log('Trello iframe rendered');
-  
-  // Load settings from Trello Power-Up storage
-  t.get('board', 'shared', 'matrixSettings')
-    .then((savedSettings) => {
-      if (savedSettings) {
-        settings = {
-          ...settings,
-          ...savedSettings,
-        };
-      }
-      updateView();
+  loadSettings()
+    .then(loadedSettings => {
+      settings = loadedSettings;
+      updateView(settings);
     })
     .catch((err) => {
       console.error('Error loading settings:', err);
@@ -38,7 +25,7 @@ function updateView() {
   // Re-render the matrix view
   t.cards('all')
     .then(function(cards) {
-      renderMatrixView(t, cards);
+      renderMatrixView(t, cards, settings);
     })
     .catch(function(error) {
       console.error('Error retrieving cards:', error);
@@ -53,8 +40,38 @@ function createCardElement(card) {
   cardElement.addEventListener('dragstart', handleDragStart);
   return cardElement;
 }
+function updateCardPositions(t, cards, unplacedCardsContainer) {
+
+  // Clear existing cards
+  document.querySelectorAll('.matrix-card .card').forEach(card => card.remove());
+  unplacedCardsContainer.innerHTML = '';
+
+  Promise.all(cards.map(card => 
+    Utils.getCardPriority(t, card.id).then(priority => ({ ...card, ...priority }))
+  )).then(cardsWithData => {
+    console.log('Promise.all resolved');
+    cardsWithData.forEach(card => {
+      const cardElement = createCardElement(card);
+
+      if (card.importance && card.urgency) {
+        // 'top' direction controls the y-axis (importance)
+        let row = settings.sideLabelDirection === 'ascending' ? card.importance - 1 : settings.gridRows - card.importance;
+        // 'side' direction controls the x-axis (urgency)
+        let col = settings.topLabelDirection === 'ascending' ? card.urgency - 1 : settings.gridCols - card.urgency;
+
+        if (row >= 0 && row < settings.gridRows && col >= 0 && col < settings.gridCols) {
+          document.getElementById(`card-container-${row}-${col}`).appendChild(cardElement);
+        } else {
+          unplacedCardsContainer.appendChild(cardElement);
+        }
+      } else {
+        unplacedCardsContainer.appendChild(cardElement);
+      }
+    });
+  });
+}
 export function renderMatrixView(t, cards) {
-  console.log('MATRIXrenderMatrixView called with cards:', cards);
+
   const matrixContainer = document.getElementById('matrix-container');
   const unplacedCardsContainer = document.getElementById('unplaced-cards');
   matrixContainer.innerHTML = ''; // Clear existing content
@@ -82,26 +99,7 @@ export function renderMatrixView(t, cards) {
   unplacedCardsContainer.addEventListener('dragover', handleDragOver);
   unplacedCardsContainer.addEventListener('drop', (event) => handleUnplacedDrop(event, t));
 
-  // Create card elements and add them to the matrix or unplaced cards section
-  Promise.all(cards.map(card => 
-    Utils.getCardPriority(t, card.id).then(priority => ({ ...card, ...priority }))
-  )).then(cardsWithData => {
-    cardsWithData.forEach(card => {
-      const cardElement = createCardElement(card);
-
-      if (card.importance && card.urgency) {
-        const row = (card.importance - 1);
-        const col = (card.urgency - 1);
-        if (row < settings.gridRows && col < settings.gridCols) {
-          document.getElementById(`card-container-${row}-${col}`).appendChild(cardElement);
-        } else {
-          unplacedCardsContainer.appendChild(cardElement);
-        }
-      } else {
-        unplacedCardsContainer.appendChild(cardElement);
-      }
-    });
-  });
+  updateCardPositions(t, cards, document.getElementById('unplaced-cards'));
 }
 function handleDragStart(event) {
 event.dataTransfer.setData('text/plain', event.target.dataset.cardId);
@@ -119,13 +117,11 @@ function handleDrop(event, t) {
     const row = parseInt(newContainer.dataset.row);
     const col = parseInt(newContainer.dataset.col);
 
-    const importance = row + 1;
-    const urgency = col + 1;
-
+    let importance = settings.topLabelDirection === 'ascending' ? row + 1 : settings.gridRows - row;
+    let urgency = settings.sideLabelDirection === 'ascending' ? col + 1 : settings.gridCols - col;
+  
     Utils.setCardPriority(t, cardId, importance, urgency).then(() => {
-      console.log(`Updated position for card ${cardId}: importance ${importance}, urgency ${urgency}`);
     }).catch(error => {
-      console.error('Error updating card position:', error);
     });
   }
 }
@@ -138,9 +134,49 @@ function handleUnplacedDrop(event, t) {
     unplacedCardsContainer.appendChild(cardElement);
 
     Utils.setCardPriority(t, cardId, null, null).then(() => {
-      console.log(`Removed importance and urgency for card ${cardId}`);
     }).catch(error => {
       console.error('Error updating card position:', error);
     });
   }
+}
+function updateArrowButtons() {
+  console.log('updating');
+  const topLabelArrow = document.getElementById('topLabelArrow');
+  const sideLabelArrow = document.getElementById('sideLabelArrow');
+
+  topLabelArrow.classList.remove('ascending', 'descending');
+  topLabelArrow.classList.add(settings.topLabelDirection);
+
+  sideLabelArrow.classList.remove('ascending', 'descending');
+  sideLabelArrow.classList.add(settings.sideLabelDirection);
+}
+document.addEventListener('DOMContentLoaded', attachArrowButtonListeners);
+
+function attachArrowButtonListeners() {
+  const topLabelArrow = document.getElementById('topLabelArrow');
+  const sideLabelArrow = document.getElementById('sideLabelArrow');
+
+  topLabelArrow.addEventListener('click', handleTopArrowClick);
+  sideLabelArrow.addEventListener('click', handleSideArrowClick);
+}
+
+function handleTopArrowClick() {
+  handleArrowButtonClick('top');
+}
+
+function handleSideArrowClick() {
+  handleArrowButtonClick('side');
+}
+
+function handleArrowButtonClick(axis) {
+  console.log('handleArrowButtonClick called with axis:', axis);
+
+  if (axis === 'top') {
+    settings.topLabelDirection = settings.topLabelDirection === 'ascending' ? 'descending' : 'ascending';
+  } else if (axis === 'side') {
+    settings.sideLabelDirection = settings.sideLabelDirection === 'ascending' ? 'descending' : 'ascending';
+  }
+
+  updateArrowButtons();
+  saveSettings(settings);
 }

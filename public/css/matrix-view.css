@@ -93,3 +93,34 @@
   margin-bottom: 5px;
   cursor: move;
 }
+.arrow-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin-left: 5px;
+}
+
+.arrow-button:focus {
+  outline: none;
+}
+
+.arrow-button i {
+  transition: transform 0.3s;
+}
+
+.arrow-button.ascending i.fa-arrow-right {
+  transform: rotate(0deg);
+}
+
+.arrow-button.descending i.fa-arrow-right {
+  transform: rotate(180deg);
+}
+
+.arrow-button.ascending i.fa-arrow-up {
+  transform: rotate(0deg);
+}
+
+.arrow-button.descending i.fa-arrow-up {
+  transform: rotate(180deg);
+}

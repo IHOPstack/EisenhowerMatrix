@@ -17,19 +17,23 @@
       <div class="matrix-wrapper">
         <div class="matrix-label top-label">
           <span id="topLabel"></span>
-          <i class="fas fa-arrow-right"></i>
+          <button id="topLabelArrow" class="arrow-button" data-arrow-type="top">
+            <i class="fas fa-arrow-right"></i>
+          </button>
         </div>
         <div class="matrix-content">
           <div class="matrix-label side-label">
             <span id="sideLabel"></span>
-            <i class="fas fa-arrow-up"></i>
+            <button id="sideLabelArrow" class="arrow-button" data-arrow-type="side">
+              <i class="fas fa-arrow-up"></i>
+            </button>
           </div>
           <div class="matrix-scroll-container">
             <div id="matrix-container" class="matrix-container"></div>
           </div>
         </div>
-                </div>
       </div>
+    </div>
     </div>
   </div>
   <script type="module" src="js/matrix-view.js"></script>
