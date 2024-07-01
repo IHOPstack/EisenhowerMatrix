@@ -124,3 +124,11 @@
 .arrow-button.descending i.fa-arrow-up {
   transform: rotate(180deg);
 }
+.editable-label {
+  cursor: pointer;
+}
+
+.editable-label:focus {
+  outline: none;
+  border-bottom: 1px dashed #000;
+}

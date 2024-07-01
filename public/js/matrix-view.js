@@ -21,7 +21,6 @@ function updateView() {
   document.querySelector('.header h2').textContent = settings.gridTitle;
   document.getElementById('topLabel').textContent = settings.topLabel;
   document.getElementById('sideLabel').textContent = settings.sideLabel;
-
   // Re-render the matrix view
   t.cards('all')
     .then(function(cards) {
@@ -30,6 +29,8 @@ function updateView() {
     .catch(function(error) {
       console.error('Error retrieving cards:', error);
     });
+    setupEditableLabel('topLabel', 'topLabel', settings);
+    setupEditableLabel('sideLabel', 'sideLabel', settings);
 }
 function createCardElement(card) {
   const cardElement = document.createElement('div');
@@ -179,4 +180,29 @@ function handleArrowButtonClick(axis) {
 
   updateArrowButtons();
   saveSettings(settings);
+}
+function setupEditableLabel(elementId, settingKey, settings) {
+  const labelElement = document.getElementById(elementId);
+  
+  labelElement.addEventListener('focus', function() {
+    labelElement.contentEditable = true;
+  });
+
+  labelElement.addEventListener('blur', function() {
+    labelElement.contentEditable = false;
+    // Revert changes if Enter wasn't pressed
+    labelElement.textContent = settings[settingKey];
+  });
+
+  labelElement.addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      const newValue = labelElement.textContent.trim();
+      if (newValue !== settings[settingKey]) {
+        settings[settingKey] = newValue;
+        saveSettings(settings);
+      }
+      labelElement.blur();
+    }
+  });
 }
