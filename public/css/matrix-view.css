@@ -1,11 +1,42 @@
+:root {
+  --background-default: #FFFFFF;
+  --background-neutral: #F4F5F7;
+  --border: #DFE1E6;
+  --text: #172B4D;
+  --text-subtle: #6B778C;
+  --brand-bold: #0052CC;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background-default: #1D2125;
+    --background-neutral: #22272B;
+    --border: #A6C5E229;
+    --text: #B6C2CF;
+    --text-subtle: #8C9BAB;
+    --brand-bold: #579DFF;
+  }
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  color: var(--text);
+  background-color: var(--background-default);
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
 .container {
   display: flex;
   flex-direction: column;
+  height: 100%;
 }
 
 .header {
-  padding: 10px;
+  padding: 16px;
   text-align: center;
+  border-bottom: 1px solid var(--border);
 }
 
 .main-content {
@@ -16,9 +47,11 @@
 
 .unplaced-cards {
   width: 200px;
-  padding: 10px;
+  padding: 16px;
   overflow-y: auto;
   flex-shrink: 0;
+  background-color: var(--background-neutral);
+  border-right: 1px solid var(--border);
 }
 
 .matrix-wrapper {
@@ -30,56 +63,59 @@
 }
 
 .matrix-label.top-label {
-  padding: 10px;
+  padding: 16px;
   text-align: center;
+  border-bottom: 1px solid var(--border);
 }
 
 .matrix-content {
   display: flex;
   flex: 1;
+  overflow: hidden;
 }
 
 .matrix-scroll-container {
   flex: 1;
   overflow: auto;
   padding: 20px;
+  overscroll-behavior-x: contain; /* This prevents browser back/forward gestures */
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS devices */
 }
 
 .matrix-container {
   display: grid;
-  gap: 10px;
+  gap: 8px;
   grid-template-columns: repeat(var(--grid-cols), 150px);
   grid-template-rows: repeat(var(--grid-rows), 100px);
   grid-auto-columns: 150px;
   grid-auto-rows: 100px;
-  background-color: blueviolet;
 }
 
 .matrix-card {
-  border: 1px solid #ccc;
-  padding: 10px;
-  background-color: #ffffff;
+  border: 1px solid var(--border);
+  padding: 8px;
+  background-color: var(--ds-background-success);
   width: 150px;
   height: 100px;
   overflow-y: auto;
   overflow-x: hidden;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 1px rgba(9, 30, 66, 0.25);
 }
-
 .matrix-label.side-label {
   writing-mode: vertical-rl;
   text-orientation: mixed;
   transform: rotate(180deg);
-  padding: 10px;
+  padding: 16px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   flex-shrink: 0;
+  border-right: 1px solid var(--border);
 }
 
 .matrix-label.side-label span {
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 .matrix-label.side-label i {
@@ -87,26 +123,30 @@
 }
 
 .card {
-  background-color: brown;
-  border: 1px solid #480202;
-  padding: 5px;
-  margin-bottom: 5px;
+  background-color: var(--background-neutral);
+  border: 1px solid var(--border);
+  padding: 8px;
+  margin-bottom: 8px;
   cursor: move;
+  border-radius: 3px;
 }
+
 .arrow-button {
   background: none;
   border: none;
   cursor: pointer;
-  padding: 0;
-  margin-left: 5px;
+  padding: 4px;
+  margin-left: 4px;
 }
 
 .arrow-button:focus {
   outline: none;
+  box-shadow: 0 0 0 2px var(--brand-bold);
 }
 
 .arrow-button i {
   transition: transform 0.3s;
+  color: var(--text-subtle);
 }
 
 .arrow-button.ascending i.fa-arrow-right {
@@ -124,11 +164,12 @@
 .arrow-button.descending i.fa-arrow-up {
   transform: rotate(180deg);
 }
+
 .editable-label {
   cursor: pointer;
 }
 
 .editable-label:focus {
   outline: none;
-  border-bottom: 1px dashed #000;
+  border-bottom: 1px dashed var(--text-subtle);
 }
