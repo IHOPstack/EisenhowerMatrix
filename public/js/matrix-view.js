@@ -71,6 +71,62 @@ function updateCardPositions(t, cards, unplacedCardsContainer) {
     });
   });
 }
+function createGrid(t, matrixContainer) {
+  const midRow = Math.floor(settings.gridRows / 2);
+  const midCol = Math.floor(settings.gridCols / 2);
+
+  for (let i = 0; i < settings.gridRows; i++) {
+    for (let j = 0; j < settings.gridCols; j++) {
+      const cardContainer = document.createElement('div');
+      cardContainer.classList.add('matrix-card');
+      cardContainer.id = `card-container-${i}-${j}`;
+      cardContainer.dataset.row = i;
+      cardContainer.dataset.col = j;
+      
+      // Determine new quadrant based on current settings
+      let quadrant;
+      if (settings.topLabelDirection === 'ascending') {
+        if (settings.sideLabelDirection === 'ascending') {
+          // Both ascending
+          if (i < midRow) {
+            quadrant = j < midCol ? 'ignore' : 'schedule';
+          } else {
+            quadrant = j < midCol ? 'delegate' : 'do-now';
+          }
+        } else {
+          // Top ascending, side descending
+          if (i < midRow) {
+            quadrant = j < midCol ? 'delegate' : 'do-now';
+          } else {
+            quadrant = j < midCol ? 'ignore' : 'schedule';
+          }
+        }
+      } else {
+        if (settings.sideLabelDirection === 'ascending') {
+          // Top descending, side ascending
+          if (i < midRow) {
+            quadrant = j < midCol ? 'schedule' : 'ignore';
+          } else {
+            quadrant = j < midCol ? 'do-now' : 'delegate';
+          }
+        } else {
+          // Both descending
+          if (i < midRow) {
+            quadrant = j < midCol ? 'do-now' : 'delegate';
+          } else {
+            quadrant = j < midCol ? 'schedule' : 'ignore';
+          }
+        }
+      }
+      
+      cardContainer.classList.add(`${quadrant}`);
+
+      cardContainer.addEventListener('dragover', handleDragOver);
+      cardContainer.addEventListener('drop', (event) => handleDrop(event, t));
+      matrixContainer.appendChild(cardContainer);
+    }
+  }
+}
 export function renderMatrixView(t, cards) {
 
   const matrixContainer = document.getElementById('matrix-container');
@@ -82,23 +138,7 @@ export function renderMatrixView(t, cards) {
   matrixContainer.style.gridTemplateColumns = `repeat(${settings.gridCols}, 1fr)`;
   matrixContainer.style.gridTemplateRows = `repeat(${settings.gridRows}, 1fr)`;
 
-  // Create grid cell containers
-  for (let i = 0; i < settings.gridRows; i++) {
-    for (let j = 0; j < settings.gridCols; j++) {
-      const cardContainer = document.createElement('div');
-      cardContainer.classList.add('matrix-card');
-      cardContainer.id = `card-container-${i}-${j}`;
-      cardContainer.dataset.row = i;
-      cardContainer.dataset.col = j;
-      cardContainer.addEventListener('dragover', handleDragOver);
-      cardContainer.addEventListener('drop', (event) => handleDrop(event, t));
-      matrixContainer.appendChild(cardContainer);
-    }
-  }
-
-  // Make the unplaced cards container a drop zone
-  unplacedCardsContainer.addEventListener('dragover', handleDragOver);
-  unplacedCardsContainer.addEventListener('drop', (event) => handleUnplacedDrop(event, t));
+  createGrid(t, matrixContainer)
 
   updateCardPositions(t, cards, document.getElementById('unplaced-cards'));
 }

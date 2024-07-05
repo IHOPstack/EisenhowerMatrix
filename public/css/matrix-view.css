@@ -101,6 +101,19 @@ body {
   overflow-x: hidden;
   box-shadow: 0 1px 1px rgba(9, 30, 66, 0.25);
 }
+.matrix-card.do-now {
+  background-color: var(--ds-background-success);
+}
+.matrix-card.schedule {
+  background-color: var(--ds-background-discovery);
+}
+.matrix-card.delegate {
+  background-color: var(--ds-background-warning);
+}
+
+.matrix-card.ignore {
+  background-color: var(--ds-background-danger);
+}
 .matrix-label.side-label {
   writing-mode: vertical-rl;
   text-orientation: mixed;
