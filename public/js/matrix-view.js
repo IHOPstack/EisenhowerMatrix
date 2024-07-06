@@ -91,12 +91,12 @@ function createGrid(t, matrixContainer) {
           if (i < midRow) {
             quadrant = j < midCol ? 'ignore' : 'schedule';
           } else {
-            quadrant = j < midCol ? 'delegate' : 'do-now';
+            quadrant = j < midCol ? 'delegate' : 'doNow';
           }
         } else {
           // Top ascending, side descending
           if (i < midRow) {
-            quadrant = j < midCol ? 'delegate' : 'do-now';
+            quadrant = j < midCol ? 'delegate' : 'doNow';
           } else {
             quadrant = j < midCol ? 'ignore' : 'schedule';
           }
@@ -107,19 +107,20 @@ function createGrid(t, matrixContainer) {
           if (i < midRow) {
             quadrant = j < midCol ? 'schedule' : 'ignore';
           } else {
-            quadrant = j < midCol ? 'do-now' : 'delegate';
+            quadrant = j < midCol ? 'doNow' : 'delegate';
           }
         } else {
           // Both descending
           if (i < midRow) {
-            quadrant = j < midCol ? 'do-now' : 'delegate';
+            quadrant = j < midCol ? 'doNow' : 'delegate';
           } else {
             quadrant = j < midCol ? 'schedule' : 'ignore';
           }
         }
       }
       
-      cardContainer.classList.add(`${quadrant}`);
+      const colorKey = `${quadrant.replace('-', '')}Color`;
+      cardContainer.style.backgroundColor = `var(--ds-background-accent-${settings[colorKey]}-subtlest)`;
 
       cardContainer.addEventListener('dragover', handleDragOver);
       cardContainer.addEventListener('drop', (event) => handleDrop(event, t));
