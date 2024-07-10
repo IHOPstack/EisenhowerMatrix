@@ -13,6 +13,7 @@
   "author": "Devin Beckwith",
   "license": "ISC",
   "dependencies": {
+    "@atlaskit/tokens": "^1.53.2",
     "connect-livereload": "^0.6.1",
     "express": "^4.19.2",
     "https": "^1.0.0"

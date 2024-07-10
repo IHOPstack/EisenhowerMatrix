@@ -2,15 +2,21 @@ import * as Utils from './utils.js'
 import { sortCards } from './organizer.js';
 
 function openMatrixView(t) {
-  console.log('openMatrixView running')
   return t.cards('all')
     .then(function(cards) {
       return t.modal({
         url: '../matrix-view.html',
         title: 'Matrix View',
         fullscreen: true,
+        accentColor: '#2596be',
+        actions: [{
+          icon: '../../gear-svgrepo-com.svg',
+          url: '../settings.html',
+          alt: 'Leftmost',
+          position: 'left',
+          text: 'open settings'
+        }],
         callback: function(t) {
-          console.log('modal callback function called');
           // Create the matrix container
           var container = document.createElement('div');
           container.id = 'matrix-container';
@@ -58,7 +64,6 @@ TrelloPowerUp.initialize({
       }];
     },
           'board-buttons': function(t){
-      console.log('board-buttons listener called');
         return {
             icon: '../../matrix-icon.svg',
             text: 'Matrix View',
@@ -77,11 +82,8 @@ TrelloPowerUp.initialize({
           t.get(card.id, 'shared', 'quadrant')
         ]))
     ]).then(([settings, [importance, urgency, quadrant]]) => {
-      console.log('Settings:', settings);
-      console.log('Quadrant:', quadrant);
       if (settings && settings.showBadges && quadrant) {
         const color = Utils.getQuadrantColor(quadrant, settings);
-        console.log('Calculated color:', color);
           return [{
           text: quadrant,
           color: color

@@ -17,15 +17,6 @@ export function setCardPriority(t, cardId, importance, urgency) {
       ]);
     });
 }
-
-export function setQuadrant(t, cardId, quadrant) {
-  t.set(cardId, 'shared', 'quadrant', quadrant);
-}
-
-export function getQuadrant(t, cardId){
-  return t.get(cardId, 'shared', 'quadrant', quadrant);
-}
-
 export function getQuadrantColor(quadrant, settings) {
   const colorMap = {
     'doNow': settings.doNowColor,

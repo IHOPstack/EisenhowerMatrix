@@ -123,7 +123,6 @@ function createGrid(t, matrixContainer) {
       const colorKey = `${quadrant.replace('-', '')}Color`;
       cardContainer.style.backgroundColor = `var(--ds-background-accent-${settings[colorKey]}-subtlest)`;
       cardContainer.dataset.quadrant = quadrant
-      console.log(cardContainer.id, ' is in quadrant: ', cardContainer.quadrant);
      
       cardContainer.addEventListener('dragover', handleDragOver);
       cardContainer.addEventListener('drop', (event) => handleDrop(event, t));
@@ -189,7 +188,6 @@ function handleUnplacedDrop(event, t) {
   }
 }
 function updateArrowButtons() {
-  console.log('updating');
   const topLabelArrow = document.getElementById('topLabelArrow');
   const sideLabelArrow = document.getElementById('sideLabelArrow');
 
@@ -218,8 +216,6 @@ function handleSideArrowClick() {
 }
 
 function handleArrowButtonClick(axis) {
-  console.log('handleArrowButtonClick called with axis:', axis);
-
   if (axis === 'top') {
     settings.topLabelDirection = settings.topLabelDirection === 'ascending' ? 'descending' : 'ascending';
   } else if (axis === 'side') {
