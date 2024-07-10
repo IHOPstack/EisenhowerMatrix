@@ -144,6 +144,8 @@ export function renderMatrixView(t, cards) {
   createGrid(t, matrixContainer)
 
   updateCardPositions(t, cards, document.getElementById('unplaced-cards'));
+  unplacedCardsContainer.addEventListener('dragover', handleDragOver);
+  unplacedCardsContainer.addEventListener('drop', (event) => handleUnplacedDrop(event, t))
 }
 function handleDragStart(event) {
 event.dataTransfer.setData('text/plain', event.target.dataset.cardId);
@@ -180,6 +182,7 @@ function handleUnplacedDrop(event, t) {
   const unplacedCardsContainer = document.getElementById('unplaced-cards');
   if (unplacedCardsContainer && cardElement) {
     unplacedCardsContainer.appendChild(cardElement);
+    t.set(cardId, 'shared', 'quadrant', null)
 
     Utils.setCardPriority(t, cardId, null, null).then(() => {
     }).catch(error => {
