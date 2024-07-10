@@ -1,0 +1,7 @@
+   [build]
+     command = "snowpack build"
+     publish = "build"
+
+   [[redirects]]
+     from = "/*"
+     to = "/index.html"

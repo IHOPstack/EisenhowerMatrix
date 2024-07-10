@@ -4,7 +4,6 @@
   "description": "Power Up for Trellow to integrate Eisenhower Matrix",
   "main": "index.html",
   "scripts": {
-    "test": "jest",
     "start": "nodemon --ignore public/ server.js",
     "dev": "node dev-server.js",
     "type": "module",
