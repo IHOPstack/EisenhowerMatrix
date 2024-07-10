@@ -42,7 +42,6 @@ function createCardElement(card) {
   return cardElement;
 }
 function updateCardPositions(t, cards, unplacedCardsContainer) {
-
   // Clear existing cards
   document.querySelectorAll('.matrix-card .card').forEach(card => card.remove());
   unplacedCardsContainer.innerHTML = '';
@@ -50,7 +49,6 @@ function updateCardPositions(t, cards, unplacedCardsContainer) {
   Promise.all(cards.map(card => 
     Utils.getCardPriority(t, card.id).then(priority => ({ ...card, ...priority }))
   )).then(cardsWithData => {
-    console.log('Promise.all resolved');
     cardsWithData.forEach(card => {
       const cardElement = createCardElement(card);
 
@@ -61,7 +59,10 @@ function updateCardPositions(t, cards, unplacedCardsContainer) {
         let col = settings.topLabelDirection === 'ascending' ? card.urgency - 1 : settings.gridCols - card.urgency;
 
         if (row >= 0 && row < settings.gridRows && col >= 0 && col < settings.gridCols) {
-          document.getElementById(`card-container-${row}-${col}`).appendChild(cardElement);
+          const thisCardsContainer = document.getElementById(`card-container-${row}-${col}`);
+          thisCardsContainer.appendChild(cardElement);
+          const quadrant = thisCardsContainer.dataset.quadrant;
+          t.set(card.id, 'shared', 'quadrant', quadrant)
         } else {
           unplacedCardsContainer.appendChild(cardElement);
         }
@@ -121,7 +122,9 @@ function createGrid(t, matrixContainer) {
       
       const colorKey = `${quadrant.replace('-', '')}Color`;
       cardContainer.style.backgroundColor = `var(--ds-background-accent-${settings[colorKey]}-subtlest)`;
-
+      cardContainer.dataset.quadrant = quadrant
+      console.log(cardContainer.id, ' is in quadrant: ', cardContainer.quadrant);
+     
       cardContainer.addEventListener('dragover', handleDragOver);
       cardContainer.addEventListener('drop', (event) => handleDrop(event, t));
       matrixContainer.appendChild(cardContainer);
@@ -156,6 +159,10 @@ function handleDrop(event, t) {
   const newContainer = event.target.closest('.matrix-card');
   if (newContainer && cardElement) {
     newContainer.appendChild(cardElement);
+
+    const quadrant = newContainer.dataset.quadrant;
+    t.set(cardId, 'shared', 'quadrant', quadrant);
+
     const row = parseInt(newContainer.dataset.row);
     const col = parseInt(newContainer.dataset.col);
 

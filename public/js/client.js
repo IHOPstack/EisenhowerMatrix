@@ -66,5 +66,28 @@ TrelloPowerUp.initialize({
               return openMatrixView(t);
             }
         }
-  }
+  },
+  'card-badges': function(t) {
+    return Promise.all([
+      t.get('board', 'shared', 'matrixSettings'),
+      t.card('id')
+        .then(card => Promise.all([
+          t.get(card.id, 'shared', 'importance'),
+          t.get(card.id, 'shared', 'urgency'),
+          t.get(card.id, 'shared', 'quadrant')
+        ]))
+    ]).then(([settings, [importance, urgency, quadrant]]) => {
+      console.log('Settings:', settings);
+      console.log('Quadrant:', quadrant);
+      if (settings && settings.showBadges && quadrant) {
+        const color = Utils.getQuadrantColor(quadrant, settings);
+        console.log('Calculated color:', color);
+          return [{
+          text: quadrant,
+          color: color
+        }];
+      }
+      return [];
+    });
+  },
 });

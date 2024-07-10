@@ -13,6 +13,7 @@ const defaultSettings = {
   delegateColor: 'yellow',
   scheduleColor: 'blue',
   ignoreColor: 'red',
+  showBadges: true,
 };
 
 // Function to load settings
@@ -77,6 +78,7 @@ function updateForm(settings) {
     }
     updateSelectColor(select, settings[`${quadrant}Color`], settings[`${quadrant}CustomColor`]);
   });
+  document.getElementById('show-badges').checked = settings.showBadges;
 }
 function handleSaveSettings(settings) {
   const newSettings = {
@@ -91,6 +93,7 @@ function handleSaveSettings(settings) {
     delegateColor: document.getElementById('delegate-color').value,
     scheduleColor: document.getElementById('schedule-color').value,
     ignoreColor: document.getElementById('ignore-color').value,
+    showBadges: document.getElementById('show-badges').checked
   };
   ['doNow', 'delegate', 'schedule', 'ignore'].forEach(quadrant => {
     const select = document.getElementById(`${quadrant}-color`);
