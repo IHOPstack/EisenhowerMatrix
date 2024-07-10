@@ -11,11 +11,13 @@ function calculateSortScore(importance, urgency) {
 }
 
 export async function sortCards(cards, t) {
-  const cardsWithScores = await Promise.all(cards.map(async card => {
-    const { importance, urgency } = await getCardPriority(t, card.id);
-    const score = calculateSortScore(importance, urgency);
-    return { id: card.id, score };
-  }));
+  const cardsWithScores = await Promise.all(
+    cards.map(async (card) => {
+      const { importance, urgency } = await getCardPriority(t, card.id);
+      const score = calculateSortScore(importance, urgency);
+      return { id: card.id, score };
+    })
+  );
 
   // Change the sort order here
   return cardsWithScores.sort((a, b) => a.score - b.score);

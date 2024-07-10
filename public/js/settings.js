@@ -18,8 +18,9 @@ const defaultSettings = {
 
 // Function to load settings
 export function loadSettings() {
-  return t.get('board', 'shared', 'matrixSettings')
-    .then(savedSettings => ({...defaultSettings, ...savedSettings}));
+  return t
+    .get('board', 'shared', 'matrixSettings')
+    .then((savedSettings) => ({ ...defaultSettings, ...savedSettings }));
 }
 
 // Function to save settings
@@ -27,28 +28,30 @@ export function saveSettings(newSettings) {
   return t.set('board', 'shared', 'matrixSettings', newSettings);
 }
 
-t.render(function() {
+t.render(function () {
   let settings;
-  loadSettings().then(loadedSettings => {
+  loadSettings().then((loadedSettings) => {
     settings = loadedSettings;
     updateForm(settings);
   });
 
-  document.getElementById('settings-form').addEventListener('submit', function(event) {
-    event.preventDefault();
-    handleSaveSettings();
-  });
-  ['doNow', 'delegate', 'schedule', 'ignore'].forEach(quadrant => {
+  document
+    .getElementById('settings-form')
+    .addEventListener('submit', function (event) {
+      event.preventDefault();
+      handleSaveSettings();
+    });
+  ['doNow', 'delegate', 'schedule', 'ignore'].forEach((quadrant) => {
     const select = document.getElementById(`${quadrant}-color`);
     const customInput = document.getElementById(`${quadrant}-color-custom`);
-    
+
     if (select && customInput) {
-      select.addEventListener('change', function() {
+      select.addEventListener('change', function () {
         customInput.style.display = this.value === 'custom' ? 'inline' : 'none';
         updateSelectColor(this, this.value, customInput.value);
       });
 
-      customInput.addEventListener('input', function() {
+      customInput.addEventListener('input', function () {
         updateSelectColor(select, 'custom', this.value);
       });
     }
@@ -60,13 +63,15 @@ function updateForm(settings) {
   document.getElementById('side-label').value = settings.sideLabel;
   document.getElementById('grid-rows').value = settings.gridRows;
   document.getElementById('grid-cols').value = settings.gridCols;
-  document.getElementById('top-label-direction').value = settings.topLabelDirection;
-  document.getElementById('side-label-direction').value = settings.sideLabelDirection;
+  document.getElementById('top-label-direction').value =
+    settings.topLabelDirection;
+  document.getElementById('side-label-direction').value =
+    settings.sideLabelDirection;
   document.getElementById('doNow-color').value = settings.doNowColor;
   document.getElementById('delegate-color').value = settings.delegateColor;
   document.getElementById('schedule-color').value = settings.scheduleColor;
   document.getElementById('ignore-color').value = settings.ignoreColor;
-  ['doNow', 'delegate', 'schedule', 'ignore'].forEach(quadrant => {
+  ['doNow', 'delegate', 'schedule', 'ignore'].forEach((quadrant) => {
     const select = document.getElementById(`${quadrant}-color`);
     const customInput = document.getElementById(`${quadrant}-color-custom`);
     select.value = settings[`${quadrant}Color`];
@@ -76,7 +81,11 @@ function updateForm(settings) {
     } else {
       customInput.style.display = 'none';
     }
-    updateSelectColor(select, settings[`${quadrant}Color`], settings[`${quadrant}CustomColor`]);
+    updateSelectColor(
+      select,
+      settings[`${quadrant}Color`],
+      settings[`${quadrant}CustomColor`]
+    );
   });
   document.getElementById('show-badges').checked = settings.showBadges;
 }
@@ -93,15 +102,13 @@ function handleSaveSettings(settings) {
     delegateColor: document.getElementById('delegate-color').value,
     scheduleColor: document.getElementById('schedule-color').value,
     ignoreColor: document.getElementById('ignore-color').value,
-    showBadges: document.getElementById('show-badges').checked
+    showBadges: document.getElementById('show-badges').checked,
   };
-  ['doNow', 'delegate', 'schedule', 'ignore'].forEach(quadrant => {
+  ['doNow', 'delegate', 'schedule', 'ignore'].forEach((quadrant) => {
     const select = document.getElementById(`${quadrant}-color`);
     newSettings[`${quadrant}Color`] = select.value;
-    
   });
-  saveSettings(newSettings)
-  .then(function() {
+  saveSettings(newSettings).then(function () {
     t.closePopup();
   });
 }
@@ -114,10 +121,10 @@ function updateSelectColor(select, color, customColor) {
   select.style.color = getContrastYIQ(select.style.backgroundColor);
 }
 
-function getContrastYIQ(hexcolor){
-  var r = parseInt(hexcolor.substr(1,2),16);
-  var g = parseInt(hexcolor.substr(3,2),16);
-  var b = parseInt(hexcolor.substr(5,2),16);
-  var yiq = ((r*299)+(g*587)+(b*114))/1000;
-  return (yiq >= 128) ? 'black' : 'white';
+function getContrastYIQ(hexcolor) {
+  var r = parseInt(hexcolor.substr(1, 2), 16);
+  var g = parseInt(hexcolor.substr(3, 2), 16);
+  var b = parseInt(hexcolor.substr(5, 2), 16);
+  var yiq = (r * 299 + g * 587 + b * 114) / 1000;
+  return yiq >= 128 ? 'black' : 'white';
 }

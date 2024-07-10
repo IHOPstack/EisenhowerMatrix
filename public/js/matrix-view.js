@@ -5,9 +5,9 @@ var t = TrelloPowerUp.iframe();
 
 let settings;
 
-t.render(function() {
+t.render(function () {
   loadSettings()
-    .then(loadedSettings => {
+    .then((loadedSettings) => {
       settings = loadedSettings;
       updateView(settings);
     })
@@ -23,14 +23,14 @@ function updateView() {
   document.getElementById('sideLabel').textContent = settings.sideLabel;
   // Re-render the matrix view
   t.cards('all')
-    .then(function(cards) {
+    .then(function (cards) {
       renderMatrixView(t, cards, settings);
     })
-    .catch(function(error) {
+    .catch(function (error) {
       console.error('Error retrieving cards:', error);
     });
-    setupEditableLabel('topLabel', 'topLabel', settings);
-    setupEditableLabel('sideLabel', 'sideLabel', settings);
+  setupEditableLabel('topLabel', 'topLabel', settings);
+  setupEditableLabel('sideLabel', 'sideLabel', settings);
 }
 function createCardElement(card) {
   const cardElement = document.createElement('div');
@@ -43,26 +43,46 @@ function createCardElement(card) {
 }
 function updateCardPositions(t, cards, unplacedCardsContainer) {
   // Clear existing cards
-  document.querySelectorAll('.matrix-card .card').forEach(card => card.remove());
+  document
+    .querySelectorAll('.matrix-card .card')
+    .forEach((card) => card.remove());
   unplacedCardsContainer.innerHTML = '';
 
-  Promise.all(cards.map(card => 
-    Utils.getCardPriority(t, card.id).then(priority => ({ ...card, ...priority }))
-  )).then(cardsWithData => {
-    cardsWithData.forEach(card => {
+  Promise.all(
+    cards.map((card) =>
+      Utils.getCardPriority(t, card.id).then((priority) => ({
+        ...card,
+        ...priority,
+      }))
+    )
+  ).then((cardsWithData) => {
+    cardsWithData.forEach((card) => {
       const cardElement = createCardElement(card);
 
       if (card.importance && card.urgency) {
         // 'top' direction controls the y-axis (importance)
-        let row = settings.sideLabelDirection === 'ascending' ? card.importance - 1 : settings.gridRows - card.importance;
+        let row =
+          settings.sideLabelDirection === 'ascending'
+            ? card.importance - 1
+            : settings.gridRows - card.importance;
         // 'side' direction controls the x-axis (urgency)
-        let col = settings.topLabelDirection === 'ascending' ? card.urgency - 1 : settings.gridCols - card.urgency;
+        let col =
+          settings.topLabelDirection === 'ascending'
+            ? card.urgency - 1
+            : settings.gridCols - card.urgency;
 
-        if (row >= 0 && row < settings.gridRows && col >= 0 && col < settings.gridCols) {
-          const thisCardsContainer = document.getElementById(`card-container-${row}-${col}`);
+        if (
+          row >= 0 &&
+          row < settings.gridRows &&
+          col >= 0 &&
+          col < settings.gridCols
+        ) {
+          const thisCardsContainer = document.getElementById(
+            `card-container-${row}-${col}`
+          );
           thisCardsContainer.appendChild(cardElement);
           const quadrant = thisCardsContainer.dataset.quadrant;
-          t.set(card.id, 'shared', 'quadrant', quadrant)
+          t.set(card.id, 'shared', 'quadrant', quadrant);
         } else {
           unplacedCardsContainer.appendChild(cardElement);
         }
@@ -83,7 +103,7 @@ function createGrid(t, matrixContainer) {
       cardContainer.id = `card-container-${i}-${j}`;
       cardContainer.dataset.row = i;
       cardContainer.dataset.col = j;
-      
+
       // Determine new quadrant based on current settings
       let quadrant;
       if (settings.topLabelDirection === 'ascending') {
@@ -119,11 +139,11 @@ function createGrid(t, matrixContainer) {
           }
         }
       }
-      
+
       const colorKey = `${quadrant.replace('-', '')}Color`;
       cardContainer.style.backgroundColor = `var(--ds-background-accent-${settings[colorKey]}-subtlest)`;
-      cardContainer.dataset.quadrant = quadrant
-     
+      cardContainer.dataset.quadrant = quadrant;
+
       cardContainer.addEventListener('dragover', handleDragOver);
       cardContainer.addEventListener('drop', (event) => handleDrop(event, t));
       matrixContainer.appendChild(cardContainer);
@@ -131,7 +151,6 @@ function createGrid(t, matrixContainer) {
   }
 }
 export function renderMatrixView(t, cards) {
-
   const matrixContainer = document.getElementById('matrix-container');
   const unplacedCardsContainer = document.getElementById('unplaced-cards');
   matrixContainer.innerHTML = ''; // Clear existing content
@@ -141,17 +160,19 @@ export function renderMatrixView(t, cards) {
   matrixContainer.style.gridTemplateColumns = `repeat(${settings.gridCols}, 1fr)`;
   matrixContainer.style.gridTemplateRows = `repeat(${settings.gridRows}, 1fr)`;
 
-  createGrid(t, matrixContainer)
+  createGrid(t, matrixContainer);
 
   updateCardPositions(t, cards, document.getElementById('unplaced-cards'));
   unplacedCardsContainer.addEventListener('dragover', handleDragOver);
-  unplacedCardsContainer.addEventListener('drop', (event) => handleUnplacedDrop(event, t))
+  unplacedCardsContainer.addEventListener('drop', (event) =>
+    handleUnplacedDrop(event, t)
+  );
 }
 function handleDragStart(event) {
-event.dataTransfer.setData('text/plain', event.target.dataset.cardId);
+  event.dataTransfer.setData('text/plain', event.target.dataset.cardId);
 }
 function handleDragOver(event) {
-event.preventDefault();
+  event.preventDefault();
 }
 function handleDrop(event, t) {
   event.preventDefault();
@@ -167,12 +188,18 @@ function handleDrop(event, t) {
     const row = parseInt(newContainer.dataset.row);
     const col = parseInt(newContainer.dataset.col);
 
-    let importance = settings.topLabelDirection === 'ascending' ? row + 1 : settings.gridRows - row;
-    let urgency = settings.sideLabelDirection === 'ascending' ? col + 1 : settings.gridCols - col;
-  
-    Utils.setCardPriority(t, cardId, importance, urgency).then(() => {
-    }).catch(error => {
-    });
+    let importance =
+      settings.topLabelDirection === 'ascending'
+        ? row + 1
+        : settings.gridRows - row;
+    let urgency =
+      settings.sideLabelDirection === 'ascending'
+        ? col + 1
+        : settings.gridCols - col;
+
+    Utils.setCardPriority(t, cardId, importance, urgency)
+      .then(() => {})
+      .catch((error) => {});
   }
 }
 function handleUnplacedDrop(event, t) {
@@ -182,12 +209,13 @@ function handleUnplacedDrop(event, t) {
   const unplacedCardsContainer = document.getElementById('unplaced-cards');
   if (unplacedCardsContainer && cardElement) {
     unplacedCardsContainer.appendChild(cardElement);
-    t.set(cardId, 'shared', 'quadrant', null)
+    t.set(cardId, 'shared', 'quadrant', null);
 
-    Utils.setCardPriority(t, cardId, null, null).then(() => {
-    }).catch(error => {
-      console.error('Error updating card position:', error);
-    });
+    Utils.setCardPriority(t, cardId, null, null)
+      .then(() => {})
+      .catch((error) => {
+        console.error('Error updating card position:', error);
+      });
   }
 }
 function updateArrowButtons() {
@@ -220,9 +248,11 @@ function handleSideArrowClick() {
 
 function handleArrowButtonClick(axis) {
   if (axis === 'top') {
-    settings.topLabelDirection = settings.topLabelDirection === 'ascending' ? 'descending' : 'ascending';
+    settings.topLabelDirection =
+      settings.topLabelDirection === 'ascending' ? 'descending' : 'ascending';
   } else if (axis === 'side') {
-    settings.sideLabelDirection = settings.sideLabelDirection === 'ascending' ? 'descending' : 'ascending';
+    settings.sideLabelDirection =
+      settings.sideLabelDirection === 'ascending' ? 'descending' : 'ascending';
   }
 
   updateArrowButtons();
@@ -230,18 +260,18 @@ function handleArrowButtonClick(axis) {
 }
 function setupEditableLabel(elementId, settingKey, settings) {
   const labelElement = document.getElementById(elementId);
-  
-  labelElement.addEventListener('focus', function() {
+
+  labelElement.addEventListener('focus', function () {
     labelElement.contentEditable = true;
   });
 
-  labelElement.addEventListener('blur', function() {
+  labelElement.addEventListener('blur', function () {
     labelElement.contentEditable = false;
     // Revert changes if Enter wasn't pressed
     labelElement.textContent = settings[settingKey];
   });
 
-  labelElement.addEventListener('keydown', function(event) {
+  labelElement.addEventListener('keydown', function (event) {
     if (event.key === 'Enter') {
       event.preventDefault();
       const newValue = labelElement.textContent.trim();

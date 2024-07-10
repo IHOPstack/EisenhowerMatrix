@@ -1,40 +1,62 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
-  <title>Matrix View</title>
-  <script src="https://p.trellocdn.com/power-up.min.js"></script>
-  <link rel="stylesheet" href="https://unpkg.com/@atlaskit/css-reset@6.0.5/dist/bundle.css" />
-  <link rel="stylesheet" href="css/matrix-view.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-</head>
-<body>
-  <div class="container">
-    <div class="header">
-      <h2 class="ak-heading-large">Matrix View</h2>
-    </div>
-    <div class="main-content">
-      <div id="unplaced-cards" class="unplaced-cards"></div>
-      <div class="matrix-wrapper">
-        <div class="matrix-label top-label">
-          <span id="topLabel" class="editable-label ak-text-medium" tabindex="0"></span>
-          <button id="topLabelArrow" class="arrow-button ak-button ak-button__appearance-subtle" data-arrow-type="top">
-            <i class="fas fa-arrow-right"></i>
-          </button>
-        </div>
-        <div class="matrix-content">
-          <div class="matrix-label side-label">
-            <span id="sideLabel" class="editable-label ak-text-medium" tabindex="0"></span>
-            <button id="sideLabelArrow" class="arrow-button ak-button ak-button__appearance-subtle" data-arrow-type="side">
-              <i class="fas fa-arrow-up"></i>
+  <head>
+    <title>Matrix View</title>
+    <script src="https://p.trellocdn.com/power-up.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/@atlaskit/css-reset@6.0.5/dist/bundle.css"
+    />
+    <link rel="stylesheet" href="css/matrix-view.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h2 class="ak-heading-large">Matrix View</h2>
+      </div>
+      <div class="main-content">
+        <div id="unplaced-cards" class="unplaced-cards"></div>
+        <div class="matrix-wrapper">
+          <div class="matrix-label top-label">
+            <span
+              id="topLabel"
+              class="editable-label ak-text-medium"
+              tabindex="0"
+            ></span>
+            <button
+              id="topLabelArrow"
+              class="arrow-button ak-button ak-button__appearance-subtle"
+              data-arrow-type="top"
+            >
+              <i class="fas fa-arrow-right"></i>
             </button>
           </div>
-          <div class="matrix-scroll-container">
-            <div id="matrix-container" class="matrix-container"></div>
+          <div class="matrix-content">
+            <div class="matrix-label side-label">
+              <span
+                id="sideLabel"
+                class="editable-label ak-text-medium"
+                tabindex="0"
+              ></span>
+              <button
+                id="sideLabelArrow"
+                class="arrow-button ak-button ak-button__appearance-subtle"
+                data-arrow-type="side"
+              >
+                <i class="fas fa-arrow-up"></i>
+              </button>
+            </div>
+            <div class="matrix-scroll-container">
+              <div id="matrix-container" class="matrix-container"></div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  <script type="module" src="js/matrix-view.js"></script>
-</body>
+    <script type="module" src="js/matrix-view.js"></script>
+  </body>
 </html>
