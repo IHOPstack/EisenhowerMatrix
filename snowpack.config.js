@@ -1,7 +1,7 @@
 module.exports = {
     mount: {
-      public: '/',
-      src: '/dist'
+      public: '/public',
+      src: '/'
     },
     plugins: [
       /* Add any Snowpack plugins here */
