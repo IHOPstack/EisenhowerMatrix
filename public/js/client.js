@@ -94,6 +94,7 @@ TrelloPowerUp.initialize({
     ]).then(([settings, [importance, urgency, quadrant]]) => {
       if (settings && settings.showBadges && quadrant) {
         const color = Utils.getQuadrantColor(quadrant, settings);
+        console.log(color)
         return [
           {
             text: quadrant,

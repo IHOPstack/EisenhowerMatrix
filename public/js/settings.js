@@ -9,10 +9,14 @@ const defaultSettings = {
   gridCols: 4,
   topLabelDirection: 'ascending',
   sideLabelDirection: 'ascending',
-  doNowColor: 'green',
+  doColor: 'green',
   delegateColor: 'yellow',
   scheduleColor: 'blue',
   ignoreColor: 'red',
+  doCustomColor: '#000000',
+  delegateCustomColor: '#000000',
+  scheduleCustomColor: '#000000',
+  ignoreCustomColor: '#000000',
   showBadges: true,
 };
 
@@ -41,7 +45,7 @@ t.render(function () {
       event.preventDefault();
       handleSaveSettings();
     });
-  ['doNow', 'delegate', 'schedule', 'ignore'].forEach((quadrant) => {
+  ['do', 'delegate', 'schedule', 'ignore'].forEach((quadrant) => {
     const select = document.getElementById(`${quadrant}-color`);
     const customInput = document.getElementById(`${quadrant}-color-custom`);
 
@@ -63,15 +67,13 @@ function updateForm(settings) {
   document.getElementById('side-label').value = settings.sideLabel;
   document.getElementById('grid-rows').value = settings.gridRows;
   document.getElementById('grid-cols').value = settings.gridCols;
-  document.getElementById('top-label-direction').value =
-    settings.topLabelDirection;
-  document.getElementById('side-label-direction').value =
-    settings.sideLabelDirection;
-  document.getElementById('doNow-color').value = settings.doNowColor;
+  document.getElementById('top-label-direction').value = settings.topLabelDirection;
+  document.getElementById('side-label-direction').value = settings.sideLabelDirection;
+  document.getElementById('do-color').value = settings.doColor;
   document.getElementById('delegate-color').value = settings.delegateColor;
   document.getElementById('schedule-color').value = settings.scheduleColor;
   document.getElementById('ignore-color').value = settings.ignoreColor;
-  ['doNow', 'delegate', 'schedule', 'ignore'].forEach((quadrant) => {
+  ['do', 'delegate', 'schedule', 'ignore'].forEach((quadrant) => {
     const select = document.getElementById(`${quadrant}-color`);
     const customInput = document.getElementById(`${quadrant}-color-custom`);
     select.value = settings[`${quadrant}Color`];
@@ -98,16 +100,24 @@ function handleSaveSettings(settings) {
     gridCols: parseInt(document.getElementById('grid-cols').value),
     topLabelDirection: document.getElementById('top-label-direction').value,
     sideLabelDirection: document.getElementById('side-label-direction').value,
-    doNowColor: document.getElementById('doNow-color').value,
+    doColor: document.getElementById('do-color').value,
     delegateColor: document.getElementById('delegate-color').value,
     scheduleColor: document.getElementById('schedule-color').value,
     ignoreColor: document.getElementById('ignore-color').value,
     showBadges: document.getElementById('show-badges').checked,
   };
-  ['doNow', 'delegate', 'schedule', 'ignore'].forEach((quadrant) => {
+  ['do', 'delegate', 'schedule', 'ignore'].forEach((quadrant) => {
     const select = document.getElementById(`${quadrant}-color`);
     newSettings[`${quadrant}Color`] = select.value;
+    if (select.value == 'custom') {
+      newSettings[`${quadrant}CustomColor`] = select.style.backgroundColor;
+      console.log('custom selected and value is: ', newSettings[`${quadrant}CustomColor`])
+    } else {
+      newSettings[`${quadrant}CustomColor`] = newSettings[`${quadrant}CustomColor`] || '#000000';
+      console.log('custom no selected but custom value is: ', newSettings[`${quadrant}CustomColor`])
+    }
   });
+  console.log(newSettings)
   saveSettings(newSettings).then(function () {
     t.closePopup();
   });

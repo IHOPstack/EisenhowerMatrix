@@ -17,11 +17,10 @@ export function setCardPriority(t, cardId, importance, urgency) {
   });
 }
 export function getQuadrantColor(quadrant, settings) {
-  const colorMap = {
-    doNow: settings.doNowColor,
-    schedule: settings.scheduleColor,
-    delegate: settings.delegateColor,
-    ignore: settings.ignoreColor,
+  let color = settings[`${quadrant}Color`];
+  if (color == 'custom') {
+    color = settings[`${quadrant}CustomColor`]
+    console.log('getQC says: ', color)
   };
-  return colorMap[quadrant];
-}
+  return color;
+};

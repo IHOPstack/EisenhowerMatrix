@@ -112,12 +112,12 @@ function createGrid(t, matrixContainer) {
           if (i < midRow) {
             quadrant = j < midCol ? 'ignore' : 'schedule';
           } else {
-            quadrant = j < midCol ? 'delegate' : 'doNow';
+            quadrant = j < midCol ? 'delegate' : 'do';
           }
         } else {
           // Top ascending, side descending
           if (i < midRow) {
-            quadrant = j < midCol ? 'delegate' : 'doNow';
+            quadrant = j < midCol ? 'delegate' : 'do';
           } else {
             quadrant = j < midCol ? 'ignore' : 'schedule';
           }
@@ -128,20 +128,26 @@ function createGrid(t, matrixContainer) {
           if (i < midRow) {
             quadrant = j < midCol ? 'schedule' : 'ignore';
           } else {
-            quadrant = j < midCol ? 'doNow' : 'delegate';
+            quadrant = j < midCol ? 'do' : 'delegate';
           }
         } else {
           // Both descending
           if (i < midRow) {
-            quadrant = j < midCol ? 'doNow' : 'delegate';
+            quadrant = j < midCol ? 'do' : 'delegate';
           } else {
             quadrant = j < midCol ? 'schedule' : 'ignore';
           }
         }
       }
 
-      const colorKey = `${quadrant.replace('-', '')}Color`;
-      cardContainer.style.backgroundColor = `var(--ds-background-accent-${settings[colorKey]}-subtlest)`;
+      const colorKey = `${quadrant}Color`;
+      if (colorKey == 'custom') {
+        colorKey = settings[`${quadrant}CustomColor`];
+        cardContainer.style.backgroundColor = colorKey;
+        console.log(colorKey);
+      } else {
+        cardContainer.style.backgroundColor = `var(--ds-background-accent-${settings[colorKey]}-subtler)`;
+      }
       cardContainer.dataset.quadrant = quadrant;
 
       cardContainer.addEventListener('dragover', handleDragOver);
