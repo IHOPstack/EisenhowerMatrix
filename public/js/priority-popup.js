@@ -1,14 +1,14 @@
-var t = TrelloPowerUp.iframe();
+let t = TrelloPowerUp.iframe();
 
-var importanceInput = document.getElementById('importance');
-var urgencyInput = document.getElementById('urgency');
+let importanceInput = document.getElementById('importance');
+let urgencyInput = document.getElementById('urgency');
 
 t.render(function () {
-  importanceInput.value = t.arg('importance') || 3;
-  urgencyInput.value = t.arg('urgency') || 3;
+  importanceInput.value = t.arg('importance');
+  urgencyInput.value = t.arg('urgency');
 });
 
-var form = document.getElementById('priority-form');
+let form = document.getElementById('priority-form');
 form.addEventListener('submit', function (event) {
   event.preventDefault();
   Promise.all([

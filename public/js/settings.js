@@ -1,6 +1,5 @@
 var t = TrelloPowerUp.iframe();
 
-// Define default settings
 const defaultSettings = {
   gridTitle: 'Matrix View',
   topLabel: 'Importance',
@@ -19,26 +18,20 @@ const defaultSettings = {
   ignoreCustomColor: '#000000',
   showBadges: true,
 };
-
-// Function to load settings
 export function loadSettings() {
   return t
     .get('board', 'shared', 'matrixSettings')
     .then((savedSettings) => ({ ...defaultSettings, ...savedSettings }));
 }
-
-// Function to save settings
 export function saveSettings(newSettings) {
   return t.set('board', 'shared', 'matrixSettings', newSettings);
 }
-
 t.render(function () {
   let settings;
   loadSettings().then((loadedSettings) => {
     settings = loadedSettings;
     updateForm(settings);
   });
-
   document
     .getElementById('settings-form')
     .addEventListener('submit', function (event) {
@@ -54,7 +47,6 @@ t.render(function () {
         customInput.style.display = this.value === 'custom' ? 'inline' : 'none';
         updateSelectColor(this, this.value, customInput.value);
       });
-
       customInput.addEventListener('input', function () {
         updateSelectColor(select, 'custom', this.value);
       });
@@ -91,7 +83,7 @@ function updateForm(settings) {
   });
   document.getElementById('show-badges').checked = settings.showBadges;
 }
-function handleSaveSettings(settings) {
+function handleSaveSettings() {
   const newSettings = {
     gridTitle: document.getElementById('grid-title').value,
     topLabel: document.getElementById('top-label').value,
@@ -111,13 +103,10 @@ function handleSaveSettings(settings) {
     newSettings[`${quadrant}Color`] = select.value;
     if (select.value == 'custom') {
       newSettings[`${quadrant}CustomColor`] = select.style.backgroundColor;
-      console.log('custom selected and value is: ', newSettings[`${quadrant}CustomColor`])
     } else {
       newSettings[`${quadrant}CustomColor`] = newSettings[`${quadrant}CustomColor`] || '#000000';
-      console.log('custom no selected but custom value is: ', newSettings[`${quadrant}CustomColor`])
     }
   });
-  console.log(newSettings)
   saveSettings(newSettings).then(function () {
     t.closePopup();
   });
@@ -128,13 +117,4 @@ function updateSelectColor(select, color, customColor) {
   } else {
     select.style.backgroundColor = `var(--ds-background-accent-${color}-subtle)`;
   }
-  select.style.color = getContrastYIQ(select.style.backgroundColor);
-}
-
-function getContrastYIQ(hexcolor) {
-  var r = parseInt(hexcolor.substr(1, 2), 16);
-  var g = parseInt(hexcolor.substr(3, 2), 16);
-  var b = parseInt(hexcolor.substr(5, 2), 16);
-  var yiq = (r * 299 + g * 587 + b * 114) / 1000;
-  return yiq >= 128 ? 'black' : 'white';
 }

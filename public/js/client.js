@@ -88,10 +88,10 @@ TrelloPowerUp.initialize({
             t.get(card.id, 'shared', 'quadrant'),
           ])
         ),
+    // Dynamically depend on settings for badge text and color 
     ]).then(([settings, [importance, urgency, quadrant]]) => {
       if (settings && settings.showBadges && quadrant) {
         const color = Utils.getQuadrantColor(quadrant, settings);
-        console.log(color)
         return [
           {
             text: quadrant,

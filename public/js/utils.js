@@ -1,4 +1,3 @@
-// Get importance and urgency for a card
 export function getCardPriority(t, cardId) {
   return Promise.all([
     t.get(cardId, 'shared', 'importance'),
@@ -7,7 +6,6 @@ export function getCardPriority(t, cardId) {
     return { importance, urgency };
   });
 }
-// Set importance and urgency for a card
 export function setCardPriority(t, cardId, importance, urgency) {
   return t.get('board', 'shared', 'matrixSettings').then((settings) => {
     return Promise.all([
@@ -20,7 +18,6 @@ export function getQuadrantColor(quadrant, settings) {
   let color = settings[`${quadrant}Color`];
   if (color == 'custom') {
     color = settings[`${quadrant}CustomColor`]
-    console.log('getQC says: ', color)
   };
   return color;
 };

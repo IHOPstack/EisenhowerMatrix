@@ -4,55 +4,36 @@
     <script src="https://p.trellocdn.com/power-up.min.js"></script>
     <script type="module" src="./js/priority-popup.js"></script>
     <style>
-      body {
-        padding: 10px;
-      }
-      form {
+      /* I really didn't want to create an entire css file just for one class */
+      .form-row {
         display: flex;
-        flex-direction: column;
-      }
-      .input-row {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 10px;
-      }
-      .input-group {
-        display: flex;
-        flex-direction: column;
-        width: 48%;
-      }
-      label {
-        font-weight: bold;
-        margin-bottom: 5px;
-      }
-      input {
-        width: 100%;
-        box-sizing: border-box;
+        flex-direction: row;
+        justify-content: space-evenly;
       }
     </style>
   </head>
-  <body class="trello-dark-theme">
+  <body>
     <form id="priority-form">
-      <div class="input-row">
-        <div class="input-group">
-          <label for="importance">Importance:</label>
+      <div class="form-row">
+        <div>
+          <label>Importance:</label>
           <input
             type="number"
             id="importance"
             name="importance"
             min="1"
-            max="5"
+            max="10"
             required
           />
         </div>
-        <div class="input-group">
-          <label for="urgency">Urgency:</label>
+        <div>
+          <label>Urgency:</label>
           <input
             type="number"
             id="urgency"
             name="urgency"
             min="1"
-            max="5"
+            max="10"
             required
           />
         </div>

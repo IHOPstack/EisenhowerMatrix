@@ -3,26 +3,14 @@
   <head>
     <link rel="stylesheet" href="https://p.trellocdn.com/power-up.min.css" />
     <script src="https://p.trellocdn.com/power-up.min.js"></script>
-    <style>
-      body {
-        padding: 20px;
-      }
-      .input-group {
-        margin-bottom: 15px;
-      }
-      label {
-        display: block;
-        margin-bottom: 5px;
-      }
-    </style>
   </head>
   <body>
     <form id="settings-form">
-      <div class="input-group">
+      <div>
         <label for="grid-title">Grid Title:</label>
         <input type="text" id="grid-title" name="grid-title" required />
       </div>
-      <div class="input-group">
+      <div>
         <label for="top-label">Top Label:</label>
         <input type="text" id="top-label" name="top-label" required />
       </div>
@@ -30,7 +18,7 @@
         <option value="ascending">Ascending</option>
         <option value="descending">Descending</option>
       </select>
-      <div class="input-group">
+      <div>
         <label for="side-label">Side Label:</label>
         <input type="text" id="side-label" name="side-label" required />
       </div>
@@ -38,7 +26,7 @@
         <option value="ascending">Ascending</option>
         <option value="descending">Descending</option>
       </select>
-      <div class="input-group">
+      <div>
         <label for="grid-rows">Grid Rows:</label>
         <input
           type="number"
@@ -49,7 +37,7 @@
           required
         />
       </div>
-      <div class="input-group">
+      <div>
         <label for="grid-cols">Grid Columns:</label>
         <input
           type="number"
@@ -60,11 +48,11 @@
           required
         />
       </div>
-      <div class="input-group">
+      <div>
         <label for="show-badges">Show Quadrant Badges:</label>
         <input type="checkbox" id="show-badges" name="show-badges" />
       </div>
-      <div class="input-group">
+      <div>
         <label for="do-color">Do Now Color:</label>
         <select id="do-color" name="do-color" class="color-select">
           <option value="green">Green</option>
@@ -82,7 +70,7 @@
           style="display: none"
         />
       </div>
-      <div class="input-group">
+      <div>
         <label for="delegate-color">Delegate Color:</label>
         <select id="delegate-color" name="delegate-color" class="color-select">
           <option value="green">Green</option>
@@ -101,7 +89,7 @@
         />
       </div>
 
-      <div class="input-group">
+      <div>
         <label for="schedule-color">Schedule Color:</label>
         <select id="schedule-color" name="schedule-color" class="color-select">
           <option value="green">Green</option>
@@ -120,7 +108,7 @@
         />
       </div>
 
-      <div class="input-group">
+      <div>
         <label for="ignore-color">Ignore Color:</label>
         <select id="ignore-color" name="ignore-color" class="color-select">
           <option value="green">Green</option>

@@ -141,11 +141,9 @@ function createGrid(t, matrixContainer) {
       }
       // Dtermine color
       let colorKey = settings[`${quadrant}Color`];
-      console.log(colorKey)
       if (colorKey == 'custom') {
         colorKey = settings[`${quadrant}CustomColor`];
         cardContainer.style.backgroundColor = colorKey;
-        console.log(colorKey, cardContainer.style.backgroundColor);
       } else {
         cardContainer.style.backgroundColor = `var(--ds-background-accent-${colorKey}-subtler)`;
       }
