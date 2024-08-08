@@ -140,13 +140,14 @@ function createGrid(t, matrixContainer) {
         }
       }
 
-      const colorKey = `${quadrant}Color`;
+      let colorKey = settings[`${quadrant}Color`];
+      console.log(colorKey)
       if (colorKey == 'custom') {
         colorKey = settings[`${quadrant}CustomColor`];
         cardContainer.style.backgroundColor = colorKey;
-        console.log(colorKey);
+        console.log(colorKey, cardContainer.style.backgroundColor);
       } else {
-        cardContainer.style.backgroundColor = `var(--ds-background-accent-${settings[colorKey]}-subtler)`;
+        cardContainer.style.backgroundColor = `var(--ds-background-accent-${colorKey}-subtler)`;
       }
       cardContainer.dataset.quadrant = quadrant;
 
