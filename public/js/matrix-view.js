@@ -160,13 +160,14 @@ function createGrid(t, matrixContainer) {
 export function renderMatrixView(t, cards) {
   const matrixContainer = document.getElementById('matrix-container');
   const unplacedCardsContainer = document.getElementById('unplaced-cards');
-  matrixContainer.innerHTML = ''; // Clear existing content
-  unplacedCardsContainer.innerHTML = ''; // Clear existing content
+  matrixContainer.innerHTML = '';
+  unplacedCardsContainer.innerHTML = '';
 
   // Update grid template
   matrixContainer.style.gridTemplateColumns = `repeat(${settings.gridCols}, 1fr)`;
   matrixContainer.style.gridTemplateRows = `repeat(${settings.gridRows}, 1fr)`;
 
+  updateArrowButtons();
   createGrid(t, matrixContainer);
 
   updateCardPositions(t, cards, document.getElementById('unplaced-cards'));
