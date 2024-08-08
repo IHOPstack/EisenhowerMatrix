@@ -21,7 +21,7 @@ function updateView() {
   document.querySelector('.header h2').textContent = settings.gridTitle;
   document.getElementById('topLabel').textContent = settings.topLabel;
   document.getElementById('sideLabel').textContent = settings.sideLabel;
-  // Re-render the matrix view
+  // Re-render the matrix view according to new settings
   t.cards('all')
     .then(function (cards) {
       renderMatrixView(t, cards, settings);
@@ -42,7 +42,7 @@ function createCardElement(card) {
   return cardElement;
 }
 function updateCardPositions(t, cards, unplacedCardsContainer) {
-  // Clear existing cards
+  // Clear existing cards to avoid duplicates
   document
     .querySelectorAll('.matrix-card .card')
     .forEach((card) => card.remove());
@@ -60,17 +60,17 @@ function updateCardPositions(t, cards, unplacedCardsContainer) {
       const cardElement = createCardElement(card);
 
       if (card.importance && card.urgency) {
-        // 'top' direction controls the y-axis (importance)
+        // side direction controls the y-axis
         let row =
           settings.sideLabelDirection === 'ascending'
             ? card.importance - 1
             : settings.gridRows - card.importance;
-        // 'side' direction controls the x-axis (urgency)
+        // top direction controls the x-axis
         let col =
           settings.topLabelDirection === 'ascending'
             ? card.urgency - 1
             : settings.gridCols - card.urgency;
-
+        // Handle cards with grid values greater than grid size in case of shrunken grid
         if (
           row >= 0 &&
           row < settings.gridRows &&
@@ -93,9 +93,10 @@ function updateCardPositions(t, cards, unplacedCardsContainer) {
   });
 }
 function createGrid(t, matrixContainer) {
+  // Establish quadrant boundary values
   const midRow = Math.floor(settings.gridRows / 2);
   const midCol = Math.floor(settings.gridCols / 2);
-
+  // Handle each grid cel individually
   for (let i = 0; i < settings.gridRows; i++) {
     for (let j = 0; j < settings.gridCols; j++) {
       const cardContainer = document.createElement('div');
@@ -103,7 +104,6 @@ function createGrid(t, matrixContainer) {
       cardContainer.id = `card-container-${i}-${j}`;
       cardContainer.dataset.row = i;
       cardContainer.dataset.col = j;
-
       // Determine new quadrant based on current settings
       let quadrant;
       if (settings.topLabelDirection === 'ascending') {
@@ -139,7 +139,7 @@ function createGrid(t, matrixContainer) {
           }
         }
       }
-
+      // Dtermine color
       let colorKey = settings[`${quadrant}Color`];
       console.log(colorKey)
       if (colorKey == 'custom') {
@@ -162,12 +162,12 @@ export function renderMatrixView(t, cards) {
   const unplacedCardsContainer = document.getElementById('unplaced-cards');
   matrixContainer.innerHTML = '';
   unplacedCardsContainer.innerHTML = '';
-
   // Update grid template
   matrixContainer.style.gridTemplateColumns = `repeat(${settings.gridCols}, 1fr)`;
   matrixContainer.style.gridTemplateRows = `repeat(${settings.gridRows}, 1fr)`;
 
   updateArrowButtons();
+
   createGrid(t, matrixContainer);
 
   updateCardPositions(t, cards, document.getElementById('unplaced-cards'));
@@ -226,18 +226,32 @@ function handleUnplacedDrop(event, t) {
       });
   }
 }
-function updateArrowButtons() {
+function updateTopArrowButton() {
   const topLabelArrow = document.getElementById('topLabelArrow');
-  const sideLabelArrow = document.getElementById('sideLabelArrow');
-
   topLabelArrow.classList.remove('ascending', 'descending');
   topLabelArrow.classList.add(settings.topLabelDirection);
-
+}
+function updateSideArrowButton() {
+  const sideLabelArrow = document.getElementById('sideLabelArrow');
   sideLabelArrow.classList.remove('ascending', 'descending');
   sideLabelArrow.classList.add(settings.sideLabelDirection);
 }
-document.addEventListener('DOMContentLoaded', attachArrowButtonListeners);
-
+function updateArrowButtons() {
+  updateTopArrowButton();
+  updateSideArrowButton();
+}
+function handleTopArrowClick() {
+  settings.topLabelDirection =
+  settings.topLabelDirection === 'ascending' ? 'descending' : 'ascending';
+  updateTopArrowButton();
+  saveSettings(settings);
+}
+function handleSideArrowClick() {
+  settings.sideLabelDirection =
+  settings.sideLabelDirection === 'ascending' ? 'descending' : 'ascending';
+  updateSideArrowButton();
+  saveSettings(settings);
+}
 function attachArrowButtonListeners() {
   const topLabelArrow = document.getElementById('topLabelArrow');
   const sideLabelArrow = document.getElementById('sideLabelArrow');
@@ -245,27 +259,8 @@ function attachArrowButtonListeners() {
   topLabelArrow.addEventListener('click', handleTopArrowClick);
   sideLabelArrow.addEventListener('click', handleSideArrowClick);
 }
+document.addEventListener('DOMContentLoaded', attachArrowButtonListeners);
 
-function handleTopArrowClick() {
-  handleArrowButtonClick('top');
-}
-
-function handleSideArrowClick() {
-  handleArrowButtonClick('side');
-}
-
-function handleArrowButtonClick(axis) {
-  if (axis === 'top') {
-    settings.topLabelDirection =
-      settings.topLabelDirection === 'ascending' ? 'descending' : 'ascending';
-  } else if (axis === 'side') {
-    settings.sideLabelDirection =
-      settings.sideLabelDirection === 'ascending' ? 'descending' : 'ascending';
-  }
-
-  updateArrowButtons();
-  saveSettings(settings);
-}
 function setupEditableLabel(elementId, settingKey, settings) {
   const labelElement = document.getElementById(elementId);
 
