@@ -10,19 +10,16 @@ function openMatrixView(t) {
       accentColor: '#2596be',
       actions: [
         {
-          icon: '../../gear-svgrepo-com.svg',
-          url: '../settings.html',
+          icon: './images/settings.svg',
+          callback: (t) => t.popup({
+            title: 'Settings',
+            url: './settings.html',
+            height: 164,
+          }),
           alt: 'Leftmost',
           position: 'left',
-          text: 'open settings',
         },
       ],
-      callback: function (t) {
-        // Create the matrix container
-        var container = document.createElement('div');
-        container.id = 'matrix-container';
-        document.body.appendChild(container);
-      },
     });
   });
 }
@@ -30,9 +27,9 @@ TrelloPowerUp.initialize({
   'card-buttons': function (t, options) {
     return [
       {
-        icon: '...',
+        icon: './images/matrix-icon.svg',
         text: 'Set Priority',
-        callback: function (t) {
+        callback: async function (t) {
           return Utils.getCardPriority(t, t.getContext().card).then(
             ({ importance, urgency }) => {
               return t.popup({
@@ -72,7 +69,7 @@ TrelloPowerUp.initialize({
   },
   'board-buttons': function (t) {
     return {
-      icon: '../../matrix-icon.svg',
+      icon: './images/matrix-icon.svg',
       text: 'Matrix View',
       callback: function (t) {
         return openMatrixView(t);
