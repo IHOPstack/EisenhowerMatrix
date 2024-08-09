@@ -63,14 +63,15 @@ function updateCardPositions(t, cards, unplacedCardsContainer) {
         // side direction controls the y-axis
         let row =
           settings.sideLabelDirection === 'ascending'
-            ? card.importance - 1
-            : settings.gridRows - card.importance;
+            ? card.urgency - 1
+            : settings.gridRows - card.urgency;
         // top direction controls the x-axis
         let col =
           settings.topLabelDirection === 'ascending'
-            ? card.urgency - 1
-            : settings.gridCols - card.urgency;
-        // Handle cards with grid values greater than grid size in case of shrunken grid
+            ? card.importance - 1
+            : settings.gridCols - card.importance;
+      
+        // Handle cards with importance and urgency greater than grid size
         if (
           row >= 0 &&
           row < settings.gridRows &&
@@ -194,14 +195,18 @@ function handleDrop(event, t) {
     const row = parseInt(newContainer.dataset.row);
     const col = parseInt(newContainer.dataset.col);
 
+    console.log('row: ',row,'col: ',col)
+
     let importance =
       settings.topLabelDirection === 'ascending'
-        ? row + 1
-        : settings.gridRows - row;
+      ? col + 1
+      : settings.gridCols - col;
     let urgency =
       settings.sideLabelDirection === 'ascending'
-        ? col + 1
-        : settings.gridCols - col;
+      ? row + 1
+      : settings.gridRows - row;
+
+    console.log('urgency: ', urgency, 'importance: ', importance)    
 
     Utils.setCardPriority(t, cardId, importance, urgency)
       .then(() => {})
